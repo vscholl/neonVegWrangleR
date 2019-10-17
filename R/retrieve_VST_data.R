@@ -1,6 +1,6 @@
 #' retrieve vegetation structure data  from NEON
 #'
-#'
+#' hello!
 #' @inheritParams str_detect
 #' @return A list of dataframe
 #' @seealso [neonUtilities::loadByProduct()] which this function wraps.
