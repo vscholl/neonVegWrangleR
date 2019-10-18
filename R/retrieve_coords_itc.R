@@ -2,10 +2,10 @@
 #'
 #'function to calculate the coordinates for each
 #'individual tree in the vegetation structure survay
-#' @inheritParams str_detect
 #' @return a dataframe
 #' @seealso [geoNEON::loadByProduct()] which this function wraps.
 #' @importFrom magrittr "%>%"
+#' @import sf
 #' @examples
 #' retrieve_VST_data("OSBS")
 #' retrieve_VST_data("all", 2017, 2019)
