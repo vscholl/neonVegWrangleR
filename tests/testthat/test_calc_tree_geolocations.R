@@ -1,8 +1,14 @@
 test_that("check if the coordintates are reliable", {
   setwd("../..")
-  tst <- retrieve_VST_data(site = "OSBS", start = 2019)
-  tst <- tst %>% dplyr::filter(individualID == "NEON.PLA.D03.OSBS.00116") %>%
-    dplyr::select(UTM_N, UTM_E) %>%
+  tst <- neonUtilities::loadByProduct("DP1.10098.001"
+                                      , check.size = F
+                                      , site = "NIWO"
+                                      , startdate = 2016)
+  tst_loc <- calc_tree_geolocations(tst)
+
+  # check expected coordinate of tree with specific individual ID
+  tst <- tst %>% dplyr::filter(individualID == "") %>%
+    dplyr::select(northing, easting) %>%
     as.numeric %>%
     round()
 
