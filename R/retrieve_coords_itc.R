@@ -5,7 +5,7 @@
 #' @inheritParams str_detect
 #' @return a dataframe
 #' @seealso [geoNEON::loadByProduct()] which this function wraps.
-#' @export
+#' @importFrom magrittr "%>%"
 #' @examples
 #' retrieve_VST_data("OSBS")
 #' retrieve_VST_data("all", 2017, 2019)

@@ -4,19 +4,13 @@
 \alias{retrieve_VST_data}
 \title{retrieve vegetation structure data  from NEON}
 \usage{
-retrieve_VST_data(site = "all", start, enddate)
+retrieve_VST_data(site = "all", start = NA, enddate = NA)
 }
 \value{
 A list of dataframe
 }
 \description{
 retrieve vegetation structure data  from NEON
-}
-\examples{
-retrieve_VST_data("OSBS")
-retrieve_VST_data("all", 2017, 2019)
-
-
 }
 \seealso{
 [neonUtilities::loadByProduct()] which this function wraps.
