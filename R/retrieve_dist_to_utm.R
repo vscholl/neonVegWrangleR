@@ -5,7 +5,6 @@
 #'@param xcord numeric. UTM East of the point ID
 #'@param ycord numeric. UTM West of the point ID
 #'
-#' @export point.coords numeric. UTM E and N of the individual tree
 #' @examples
 #' retrieve_dist_to_utm(dista = 20, angle = 87, xcord = 432)
 #'

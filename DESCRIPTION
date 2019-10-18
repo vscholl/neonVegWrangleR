@@ -9,7 +9,10 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: tidyverse, 
-  neonUtilities, 
-  sf
+Imports: 
+    tidyverse,
+    neonUtilities,
+    sf,
+    magrittr
+Remotes: giothub::NEONScience/NEON-geolocation/geoNEON
 RoxygenNote: 6.1.99.9001
