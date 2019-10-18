@@ -16,3 +16,5 @@ Imports:
     magrittr
 Remotes: giothub::NEONScience/NEON-geolocation/geoNEON
 RoxygenNote: 6.1.99.9001
+Suggests: 
+    testthat (>= 2.1.0)
