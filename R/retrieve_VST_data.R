@@ -15,3 +15,4 @@ retrieve_VST_data <- function(site = "all", start = NA, enddate = NA){
   vst_crd <- retrieve_coords_itc(vst$vst_mappingandtagging)
   return(vst)
 }
+
