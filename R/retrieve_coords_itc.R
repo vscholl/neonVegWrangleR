@@ -6,6 +6,9 @@
 #' @seealso [geoNEON::loadByProduct()] which this function wraps.
 #' @importFrom magrittr "%>%"
 #' @import sf
+#' @import  dplyr
+#' @import stringr
+#'
 #' @examples
 #' retrieve_VST_data("OSBS")
 #' retrieve_VST_data("all", 2017, 2019)
@@ -15,7 +18,7 @@ retrieve_coords_itc <- function(dat){
 
   #import shapefile with the coordinates of plots and pointIDs for NEON vegetation structure
   plots<-st_read("./meta/NEON_TOS.shp") %>% data.frame %>%
-    filter(str_detect(appMods,"vst"))
+    dplyr::filter(str_detect(appMods,"vst"))
 
   # mutate  point and plot id into factors, and remove multiple entries
   dat<-dat %>%
@@ -43,3 +46,4 @@ retrieve_coords_itc <- function(dat){
   return(field_tag)
 
 }
+

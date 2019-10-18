@@ -3,6 +3,8 @@
 export(`%>%`)
 export(calc_tree_geolocations)
 export(retrieve_VST_data)
+import(dplyr)
 import(sf)
+import(stringr)
 importFrom(magrittr,"%>%")
 importFrom(magrittr,`%>%`)
