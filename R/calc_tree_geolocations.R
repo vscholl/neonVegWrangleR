@@ -6,7 +6,8 @@
 #' @seealso [geoNEON::def.calc.geo.os()] which this function wraps
 #' @export
 #' @examples
-#' calc_tree_geolocations(data = vst)
+#' calc_tree_geolocations(data = vst
+#'                        , dataProd = "vst_mappingandtagging")
 #'
 #'
 #'
@@ -16,12 +17,12 @@ calc_tree_geolocations <- function(data = vst
   # using the NEON function, calculate precise geolocations for each
   # mapped individual, from distance & azimuth to easting & northing.
   # must specify "vst_mappingandtagging" as the data product.
-  vst_loc <- def.calc.geo.os(data = vst[[dataProd]]
+  vst_loc <- def.calc.geo.os(data = data[[dataProd]]
                               , dataProd = dataProd) %>%
 
     # Rename the adjEasting and adjNorthing columns
     dplyr::rename(easting = adjEasting
                   , northing = adjNorthing)
-  vst[[dataProd]] <- vst_loc
+  data[[dataProd]] <- vst_loc
   return(vst)
 }

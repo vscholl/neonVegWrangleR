@@ -4,7 +4,7 @@ test_that("check if the coordintates are reliable", {
                                       , check.size = F
                                       , site = "NIWO"
                                       , startdate = 2016)
-  tst_loc <- calc_tree_geolocations(tst)
+  tst_loc <- calc_tree_geolocations(data = tst)
 
   # check expected coordinate of tree with specific individual ID
   tst <- tst %>% dplyr::filter(individualID == "") %>%
