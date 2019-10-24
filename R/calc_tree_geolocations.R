@@ -9,8 +9,6 @@
 #' calc_tree_geolocations(data = vst
 #'                        , dataProd = "vst_mappingandtagging")
 #'
-#'
-#'
 calc_tree_geolocations <- function(data = vst
                                    , dataProd = "vst_mappingandtagging"){
 
