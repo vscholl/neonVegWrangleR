@@ -19,12 +19,13 @@ aop_retriever <- function(data, years,
   coords_for_tiles$easting <- as.integer(coords_for_tiles$easting / 1000) * 1000
   coords_for_tiles$northing <- as.integer(coords_for_tiles$northing / 1000) * 1000
 
+  #get list of tiles with vegetation structure
   tiles <- coords_for_tiles[-1] %>% unique
   tiles <- tiles[complete.cases(tiles),]
-
+  #convert CHEQ into STEI (only the latter on the portal)
   tiles[tiles$siteID == "CHEQ", "siteID"] <- "STEI"
   tiles %>% unique
-  #elevation
+  #loop through tiles and data products: default is topographic and RS data
   for(ii in 1:nrow(tiles)){
     for(prd in products){
       #elevation
