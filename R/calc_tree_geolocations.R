@@ -22,5 +22,5 @@ calc_tree_geolocations <- function(data = vst
     dplyr::rename(easting = adjEasting
                   , northing = adjNorthing)
   data[[dataProd]] <- vst_loc
-  return(vst)
+  return(data)
 }
