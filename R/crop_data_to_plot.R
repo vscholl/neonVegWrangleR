@@ -6,7 +6,7 @@
 #' @export
 #' @examples from_inventory_to_shp()
 #' @importFrom magrittr "%>%"
-#' @import sf
+#' @import sf, reticulate
 crop_data_to_plot <- function(dataproduct= "DP3.30025.001", plots){
   #get path of files in
   list_data <- list.files(path = paste("./outdir/", dataproduct, sep=""), full.names = T,
@@ -14,6 +14,8 @@ crop_data_to_plot <- function(dataproduct= "DP3.30025.001", plots){
 
   plots$easting <- as.integer(plots$easting / 1000) * 1000
   plots$northing <- as.integer(plots$northing / 1000) * 1000
+  plots <- dplyr::select(plots, plotID, api.utmZone, easting, northing)
+  plots <- unique(plots)
   lapply(clip_plot, 1:nrow(plots))
 }
 
@@ -49,8 +51,20 @@ clip_plot <- function(plt, list_data, bff=22){
       #and save
       writeLAS(las, paste("./outdir/plots/las/",
                           plt[1,1], ".las", sep=""))
-    }else if(substr(f, nchar(f)-4+1, nchar(f))==".h5"){
+    }else if(substr(f, nchar(f)-3+1, nchar(f))==".h5"){
+      #get epsg from h5
+      epsg <- get_epsg_from_utm(plt["api.utmZone"])
       #convert h5 into a tif for the extent of the plot using python
+      use_virtualenv("pyenv")
+      source_python("./R/extract_raster_from_h5.py")
+      h5_to_tif <- extract_hsi(f,
+                               plt[1,1],
+                               plt$easting - bff,
+                               plt$easting + bff,
+                               plt$northing - bff,
+                               plt$northing + bff,
+                               epsg,
+                               ras_dir = './outdir/plots/hsi/')
 
 
 
