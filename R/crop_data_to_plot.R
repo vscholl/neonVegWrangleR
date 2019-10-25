@@ -4,70 +4,23 @@
 #' @inheritParams str_detect
 #' @return A list of dataframe
 #' @export
-#' @examples from_inventory_to_shp()
+#' @examples apply(plots, 1, clip_plot, list_data, bff=bff)
 #' @importFrom magrittr "%>%"
 #' @import sf, reticulate
-crop_data_to_plot <- function(dataproduct= "DP3.30025.001", plots){
+crop_data_to_plot <- function(dtprd= "DP3.30006.001", plots, bff=22){
   #get path of files in
-  list_data <- list.files(path = paste("./outdir/", dataproduct, sep=""), full.names = T,
-                          pattern = ".tif|.h5|.laz", recursive = T)
+  for(dataproduct in dtprd){
+    list_data <- list.files(path = paste("./outdir/", dataproduct, sep=""), full.names = T,
+                            pattern = ".tif|.h5|.laz", recursive = T)
 
-  plots$easting <- as.integer(plots$easting / 1000) * 1000
-  plots$northing <- as.integer(plots$northing / 1000) * 1000
-  plots <- dplyr::select(plots, plotID, api.utmZone, easting, northing)
-  plots <- unique(plots)
-  lapply(clip_plot, 1:nrow(plots))
-}
-
-clip_plot <- function(plt, list_data, bff=22){
-  # get tile for the plot
-  tile <- paste(plt["easting"], plt["northing"], sep="_")
-  tile <- dplyr::filter(data.frame(list_data), grepl(tile, list_data))
-  tile <- unlist(tile) %>% as.character
-  #in case of multiple data products per neon product
-  for(f in tile){
-    #load raster or las file
-    if(substr(f, nchar(f)-4+1, nchar(f))==".tif"){
-      prd = substr(f, nchar(f)-8+1, nchar(f)-4)
-      f<-raster::brick(f)
-      #get object with  extent of plot center + buffer
-      e <- raster::extent(plt$easting - bff,
-                  plt$northing - bff,
-                  plt$easting + bff,
-                  plt$northing + bff)
-      #crop
-      tif <- raster::crop(f, e)
-      #and save
-      raster::writeRaster(tif,  paste("./outdir/plots/", prd, "/",
-                                      plt[1,1], ".tif", sep=""))
-    }else if(substr(f, nchar(f)-4+1, nchar(f))==".laz"){
-      #read pointcloud
-      f <- lidR::readLAS(f)
-      #clip by extent
-      las <- lasclipRectangle(f, xleft = plt$easting - bff,
-                              plt$northing - bff,
-                              plt$easting + bff,
-                              plt$northing + bff)
-      #and save
-      writeLAS(las, paste("./outdir/plots/las/",
-                          plt[1,1], ".las", sep=""))
-    }else if(substr(f, nchar(f)-3+1, nchar(f))==".h5"){
-      #get epsg from h5
-      epsg <- get_epsg_from_utm(plt["api.utmZone"])
-      #convert h5 into a tif for the extent of the plot using python
-      use_virtualenv("pyenv")
-      source_python("./R/extract_raster_from_h5.py")
-      h5_to_tif <- extract_hsi(f,
-                               plt[1,1],
-                               plt$easting - bff,
-                               plt$easting + bff,
-                               plt$northing - bff,
-                               plt$northing + bff,
-                               epsg,
-                               ras_dir = './outdir/plots/hsi/')
-
-
-
-    }
+    plots <- dplyr::select(plots, plotID, utmZone, easting, northing)
+    plots <- unique(plots)
+    plots <- plots[complete.cases(plots),]
+    plots$plt_e <- as.integer(plots$easting / 1000) * 1000
+    plots$plt_n <- as.integer(plots$northing / 1000) * 1000
+    #apply the clipping function to each plot in the dataset
+    print(paste("extracting plots information for data in:", dataproduct))
+    pbapply(plots, 1, clip_plot, list_data, bff=bff)
   }
 }
+
