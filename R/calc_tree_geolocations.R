@@ -15,7 +15,7 @@ calc_tree_geolocations <- function(data = vst
   # using the NEON function, calculate precise geolocations for each
   # mapped individual, from distance & azimuth to easting & northing.
   # must specify "vst_mappingandtagging" as the data product.
-  vst_loc <- geoNEON::def.calc.geo.os(data = data[[dataProd]]
+  vst_loc <- def.calc.geo.os(data = data[[dataProd]]
                               , dataProd = dataProd) %>%
 
     # Rename the adjEasting and adjNorthing columns

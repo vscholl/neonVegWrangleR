@@ -14,7 +14,7 @@ aop_retriever <- function(data, years,
                                      "DP3.30015.001", "DP1.30003.001")){
   #extract information needed to get AOP tiles
   coords_for_tiles <- data %>%
-    dplyr::select(plotID, siteID, api.utmZone, easting, northing)
+    dplyr::select(plotID, siteID, utmZone, easting, northing)
   #get tiles dimensions
   coords_for_tiles$easting <- as.integer(coords_for_tiles$easting / 1000) * 1000
   coords_for_tiles$northing <- as.integer(coords_for_tiles$northing / 1000) * 1000
@@ -28,11 +28,16 @@ aop_retriever <- function(data, years,
   #loop through tiles and data products: default is topographic and RS data
   for(ii in 1:nrow(tiles)){
     for(prd in products){
-      #elevation
-      byTileAOP(prd, site = tiles[ii,"siteID"],
-                # year = years[years$siteID %in% tiles[ii, "siteID"], "scanDate"],
-                year = years,tiles[ii,"easting"], tiles[ii,"northing"],
-                buffer = 0, check.size = F, savepath = paste("./outdir/", prd,"/", sep=""))
+      tryCatch({
+        #elevation
+        neonUtilities::byTileAOP(prd, site = tiles[ii,"siteID"],
+                                 year = years,tiles[ii,"easting"], tiles[ii,"northing"],
+                                 buffer = 0, check.size = F, savepath = paste("./outdir/", prd,"/", sep=""))
+
+      },error = function(e) {
+        print(paste("site",tiles[ii,"siteID"], "could not be fully downloaded! Error in retrieving:", prd,
+                    "for year", years, ". error returned:", e))
+      })
     }
   }
 }

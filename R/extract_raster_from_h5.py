@@ -6,6 +6,7 @@ import ogr, os
 
 
 def h5refl2array(refl_filename, epsg):
+    refl_filename = full_path
     hdf5_file = h5py.File(refl_filename, 'r')
     file_attrs_string = str(list(hdf5_file.items()))
     file_attrs_string_split = file_attrs_string.split("'")
@@ -133,11 +134,11 @@ def calc_clip_index(clipExtent, h5Extent, xscale=1, yscale=1):
 
     return ind_ext
 
-def extract_hsi(f, itc_id, itc_xmin, itc_xmax, itc_ymin, itc_ymax, epsg, ras_dir = './outdir/plots/hsi/'):
+def extract_hsi(full_path, itc_id, itc_xmin, itc_xmax, itc_ymin, itc_ymax, epsg, ras_dir = './outdir/plots/hsi/'):
 
     print(itc_id, itc_xmin, itc_xmax, itc_ymin, itc_ymax, epsg)
     #extract array in h5
-    refl_md, refl = h5refl2array(f, epsg = epsg)
+    refl_md, refl = h5refl2array(full_path, epsg = epsg)
     
     #delete water bands
     rgb = np.r_[0:425]
@@ -182,5 +183,6 @@ def extract_hsi(f, itc_id, itc_xmin, itc_xmax, itc_ymin, itc_ymax, epsg, ras_dir
     ii = str(itc_id) + '.tif'
     #save array to raster
     array2raster(ii, hcp, sub_meta, clipExtent, ras_dir, int(epsg))
+    
     return 0
   
