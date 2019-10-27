@@ -8,16 +8,18 @@
 #' @importFrom magrittr "%>%"
 #' @import sf
 #'
-from_inventory_to_shp <- function(stem_locations_shp=NULL
+from_inventory_to_shp <- function(stem_locations=NULL
               #,veg_types = c("small tree", "single bole tree", "multi-bole tree")
               ,outdir= "./outdir/field_data/neon_vegetation.shp"){
-  #get lat/lon for all trees in the dataset
-  stem_locations_shp = get_lat_long(stem_locations_shp)
-  #transform into spatial data
+  
+  # get lat/lon for all trees in the dataset
+  stem_locations_shp = get_lat_long(stem_locations)
+  
+  # transform into spatial data
   stem_locations_shp <- sf::st_as_sf(stem_locations_shp,
               coords = c("latitude", "longitude"), crs = 4326)
 
-  #save
-  sf::st_write(stem_locations_shp,outdir, delete_layer=TRUE)
+  # write to shapefile
+  sf::st_write(stem_locations_shp, outdir, delete_layer=TRUE)
 
 }
