@@ -7,7 +7,7 @@
 #' @examples from_inventory_to_shp()
 #' @importFrom magrittr "%>%"
 #' @import sf, reticulate, stringr
-clip_plot <- function(plt, list_data, bff=22){
+clip_plot <- function(plt, list_data, which_python = "pyenv", bff=22){
   # get tile for the plot
   plt <- data.frame(t(plt), stringsAsFactors=F)
   #convert plots coordinates from character to numeric
@@ -51,7 +51,8 @@ clip_plot <- function(plt, list_data, bff=22){
       #get epsg from h5
       epsg <- get_epsg_from_utm(plt[["utmZone"]])
       #convert h5 into a tif for the extent of the plot using python
-      use_condaenv("pyenv", required = T)
+      use_condaenv(which_python, required = T)
+      #check if the libraries required are installed in the virtual environment
       h5py <- import("h5py")
       source_python("./R/extract_raster_from_h5.py")
       tryCatch({
