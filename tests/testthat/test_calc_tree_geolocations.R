@@ -7,11 +7,12 @@ test_that("check if the coordintates are reliable", {
   tst_loc <- calc_tree_geolocations(data = tst)
 
   # check expected coordinate of tree with specific individual ID
-  tst <- tst %>% dplyr::filter(individualID == "") %>%
+  tst_coord <- tst_loc$vst_mappingandtagging %>% 
+    dplyr::filter(individualID == "NEON.PLA.D13.NIWO.00267") %>%
     dplyr::select(northing, easting) %>%
     as.numeric %>%
     round()
 
-  expect_equal(tst, c(3284946, 404040))
+  expect_equal(tst_coord, c(4433563, 450101))
 
 })
