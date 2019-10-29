@@ -21,5 +21,7 @@ from_inventory_to_shp <- function(stem_locations=NULL
 
   # write to shapefile
   sf::st_write(stem_locations_shp, outdir, delete_layer=TRUE)
+  
+  return(stem_locations_shp)
 
 }

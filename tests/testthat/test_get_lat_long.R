@@ -8,7 +8,7 @@ test_that("check if the LAT/LONG coordintates are reliable", {
   
   # check expected LAT/LONG coordinate of tree with specific individual ID
   tst_utm <- tst_loc$vst_mappingandtagging 
-  tst_geo <- get_lat_long(tst_utm)
+  tst_geo <- get_lat_long(field_data = tst_utm)
   tst_coord <- tst_geo %>% 
     dplyr::filter(individualID == "NEON.PLA.D13.NIWO.00267") %>%
     dplyr::select(latitude, longitude) %>%
