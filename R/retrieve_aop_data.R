@@ -15,11 +15,14 @@ aop_retriever <- function(data, year,
                                        ,"DP3.30015.001"  # canopy height model
                                        #,"DP1.30003.001" # lidar point cloud
                           )){
-  
+
   # extract information needed to get AOP tiles
   coords_for_tiles <- data %>%
     dplyr::select(plotID, siteID, api.utmZone, easting, northing)
-  
+  # collect years per plot per date
+  year = substr(year, 1, 4)
+  coords_for_tiles <- cbind.data.frame(coords_for_tiles, years)
+
   # get tiles dimensions
   coords_for_tiles$easting <- as.integer(coords_for_tiles$easting / 1000) * 1000
   coords_for_tiles$northing <- as.integer(coords_for_tiles$northing / 1000) * 1000
@@ -35,22 +38,22 @@ aop_retriever <- function(data, year,
     for(prd in products){
       tryCatch({
         #elevation
-        neonUtilities::byTileAOP(prd, 
+        neonUtilities::byTileAOP(prd,
                                  site = tiles[ii, "siteID"],
-                                 year = year, 
-                                 tiles[ii, "easting"], 
+                                 year = tiles[ii,"year"],
+                                 tiles[ii, "easting"],
                                  tiles[ii,"northing"],
-                                 buffer = 0, 
-                                 check.size = F, 
-                                 savepath = paste("./outdir/", 
-                                                  prd, 
-                                                  "/", 
+                                 buffer = 0,
+                                 check.size = F,
+                                 savepath = paste("./outdir/",
+                                                  prd,
+                                                  "/",
                                                   sep = ""))
 
       }, error = function(e) {
-        print(paste("site",tiles[ii,"siteID"], 
-                    "could not be fully downloaded! Error in retrieving:", 
-                    prd, "for year", year, ". error returned:", e))
+        print(paste("site",tiles[ii,"siteID"],
+                    "could not be fully downloaded! Error in retrieving:",
+                    prd, "for year",  tiles[ii,"year"], ". error returned:", e))
       })
     }
   }
