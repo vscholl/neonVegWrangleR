@@ -21,7 +21,7 @@ retrieve_aop_data <- function(data, year,
     dplyr::select(plotID, siteID, api.utmZone, easting, northing)
   # collect years per plot per date
   year = substr(year, 1, 4)
-  coords_for_tiles <- cbind.data.frame(coords_for_tiles, years)
+  coords_for_tiles <- cbind.data.frame(coords_for_tiles, year)
 
   # get tiles dimensions
   coords_for_tiles$easting <- as.integer(coords_for_tiles$easting / 1000) * 1000
