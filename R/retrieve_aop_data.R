@@ -8,7 +8,7 @@
 #' @importFrom magrittr "%>%"
 #' @import neonUtilities, tidyverse, readr
 #'
-aop_retriever <- function(data, year,
+retrieve_aop_data <- function(data, year,
                           products = c("DP3.30024.001"   # lidar-derived DTM, DSM
                                        ,"DP3.30006.001"  # hyperspectral reflectance
                                        ,"DP3.30025.001"  # lidar-derived slope, aspect
@@ -32,7 +32,7 @@ aop_retriever <- function(data, year,
   tiles <- tiles[complete.cases(tiles),]
   # convert CHEQ into STEI (only the latter on the portal)
   tiles[tiles$siteID == "CHEQ", "siteID"] <- "STEI"
-  tiles %>% unique
+  tiles <- tiles %>% unique
   # loop through tiles and data products: default is topographic and RS data
   for(ii in 1:nrow(tiles)){
     for(prd in products){
