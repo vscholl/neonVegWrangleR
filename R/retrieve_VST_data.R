@@ -1,4 +1,4 @@
-#' retrieve vegetation structure data  from NEON
+#' retrieve vegetation structure data from NEON
 #'
 #'
 #' @inheritParams str_detect
@@ -9,9 +9,13 @@
 #' @importFrom magrittr "%>%"
 #'
 retrieve_VST_data <- function(site = "all", start = NA, enddate = NA){
-  #load vegetation structure in R
-  vst <- neonUtilities::loadByProduct("DP1.10098.001", check.size=F, site=site, start, enddate)
-  #calculate coordinates od vst entries
+  
+  # load NEON woody vegetation structure data product into R
+  vst <- neonUtilities::loadByProduct("DP1.10098.001", check.size=F,
+                                      site=site, start, enddate)
+  
+  # calculate UTM coordinates of vst entries based on azimuth and distance
+  # measurements from plot reference points
   vst <- calc_tree_geolocations(vst, dataProd = "vst_mappingandtagging")
 
   return(vst)
