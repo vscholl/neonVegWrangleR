@@ -1,4 +1,4 @@
-#' create a shapefile out of vegetation structure data with lat/lon coordinates
+#' calculate latitude and longitude values for each stem in the vst data
 #'
 #'
 #' @inheritParams str_detect
@@ -19,15 +19,16 @@ get_lat_long <- function(field_data){
     dat <- dat[complete.cases(dat),]
     #todo: check the UTMS
     epsg <- get_epsg_from_utm(unique(dat$api.utmZone))
+    # transform coordinates to lat/lon and add these columns to the df
     for(ii in 1:length(epsg)){
-      utmZn <- substr(epsg,4,nchar(epsg))
-      utmZn <- paste(as.integer(utmZn), "N", sep="")
-      dt = dplyr::filter(dat, api.utmZone==utmZn[ii])
+      utmZn <- substr(epsg, 4, nchar(epsg))
+      utmZn <- paste(as.integer(utmZn), "N", sep = "")
+      dt = dplyr::filter(dat, api.utmZone == utmZn[ii])
       utm_coords <- dt[c("easting", "northing")]
-      coordinates(dt) <- c("easting", "northing")
-      proj4string(dt) <- CRS(paste("+init=epsg:", epsg[ii], sep =""))
-      CRS.new <- CRS("+init=epsg:4326")
-      dt <- spTransform(dt, CRS.new)
+      sp::coordinates(dt) <- c("easting", "northing")
+      sp::proj4string(dt) <- sp::CRS(paste("+init=epsg:", epsg[ii], sep = ""))
+      CRS.new <- sp::CRS("+init=epsg:4326")
+      dt <- sp::spTransform(dt, CRS.new)
       coords_dat <- dt@coords
       colnames(dt@coords) <- c("latitude", "longitude")
       new_dat <- rbind(new_dat, cbind(dt@data, utm_coords, dt@coords))

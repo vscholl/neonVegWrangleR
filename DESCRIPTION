@@ -1,6 +1,6 @@
 Package: neonVegWrangleR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Wrangling NEON Vegetation Data to Integrate with Airborne Remote Sensing Data 
 Version: 0.1.0
 Author: Sergio Marconi, Victoria Scholl, Ben Weinstein, Jennifer Balch, Ethan White
 Maintainer: The package maintainer <yourself@somewhere.net>
