@@ -14,17 +14,18 @@
 #' retrieve_VST_data("all", 2017, 2019)
 #'
 #'
-retrieve_coords_itc <- function(dat){
+retrieve_coords_itc <- function(data
+                                , dataProd = "vst_mappingandtagging"){
 
   #import shapefile with the coordinates of plots and pointIDs for NEON vegetation structure
-  plots<-st_read("./meta/NEON_TOS.shp") %>% data.frame %>%
-    dplyr::filter(str_detect(appMods,"vst"))
+  plots <- sf::st_read("./meta/NEON_TOS.shp") %>% data.frame %>%
+    dplyr::filter(stringr::str_detect(appMods,"vst"))
 
   # mutate  point and plot id into factors, and remove multiple entries
-  dat<-dat %>%
-    mutate(pointID=factor(pointID, levels = levels(unique(plots$pointID))) )%>%
-    mutate(plotID=factor(plotID, levels = levels(unique(plots$plotID)))) %>%
-    inner_join(plots,by=c("plotID","pointID"))
+  dat <- data[[dataProd]] %>%
+    dplyr::mutate(pointID=factor(pointID, levels = levels(unique(plots$pointID))) )%>%
+    dplyr::mutate(plotID=factor(plotID, levels = levels(unique(plots$plotID)))) %>%
+    dplyr::inner_join(plots,by=c("plotID","pointID"))
 
   # check if there are individualIDs missing teh azimuth, remove them in case
   if(sum(is.na(dat["stemAzimuth"]))>0){
@@ -42,8 +43,12 @@ retrieve_coords_itc <- function(dat){
     t %>%
     data.frame
   colnames(coords) <- c('UTM_E', 'UTM_N')
-  field_tag <- cbind(dat, coords) %>% filter(!is.na(UTM_E))
-  return(field_tag)
+  field_tag <- cbind(dat, coords) %>% dplyr::filter(!is.na(UTM_E))
+  
+  # combine the easting, northing stem coordinates with the other data tables 
+  data[[dataProd]] <- field_tag
+  
+  return(data)
 
 }
 

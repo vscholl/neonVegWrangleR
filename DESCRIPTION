@@ -13,7 +13,9 @@ Imports:
     tidyverse,
     neonUtilities,
     sf,
-    magrittr
+    magrittr,
+    stringr,
+    dplyr
 Remotes: github::NEONScience/NEON-geolocation/geoNEON, 
     github::NEONScience/NEON-utilities/neonUtilities
 RoxygenNote: 6.1.99.9001
