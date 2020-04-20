@@ -11,7 +11,7 @@
 retrieve_cfc_data <- function(site = "all", start = NA, enddate = NA,
                               unwanted = c("validation","variables", "cfc_elements")){
   # download foliar traits data
-  fol_fc <- neonUtilities::loadByProduct("DP1.10026.001", check.size=F,
+  fol_fc <- neonUtilities::loadByProduct("DP1.10053.001", check.size=F,
                                          site=site,  start = start, enddate = enddate)
 
   # for joining only the data we are interested in and cleaning the putput, hardcoding the columns we consider of interest
@@ -23,7 +23,7 @@ retrieve_cfc_data <- function(site = "all", start = NA, enddate = NA,
                    "foliarMagnesiumConc",  "foliarSulfurConc","foliarManganeseConc",
                    "foliarIronConc","foliarCopperConc","foliarBoronConc",  "taxonID",
                    "foliarZincConc", "nlcdClass", "individualID", "plantStatus","ligninPercent",
-                   "cellulosePercent", "leafArea", "percentGreen","leafMassPerArea","dryMassFraction")
+                   "cellulosePercent", "leafArea","leafMassPerArea","dryMassFraction")
 
   #get columns of interest
   df_combined <- list()
@@ -31,6 +31,7 @@ retrieve_cfc_data <- function(site = "all", start = NA, enddate = NA,
     if(!(dat %in% unwanted)){
       dt <- fol_fc[[dat]] %>%
         dplyr::select(one_of(col_to_keep))
+        #dplyr::select(-one_of(c("sampleCondition", "dataQF", "remarks", "ligninSampleBarcode")))
       if(dat == "cfc_chlorophyll"){
         dt <- dplyr::rename(dt, pigments_fresh_weight = freshMass)
       }else if(dat == "cfc_lignin"){
@@ -46,6 +47,6 @@ retrieve_cfc_data <- function(site = "all", start = NA, enddate = NA,
   df_combined <- Reduce(dplyr::left_join,
                         list(df_combined[["cfc_fieldData"]], df_combined[["cfc_carbonNitrogen"]],
                              df_combined[["cfc_chlorophyll"]],df_combined[["cfc_lignin"]],
-                             df_combined[["cfc_LMA"]])) #, df_combined[["cfc_elements"]]))
+                             df_combined[["cfc_LMA"]]))#, df_combined[["cfc_elements"]]))
   return(df_combined)
 }

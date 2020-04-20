@@ -34,17 +34,31 @@ plots <- data$vst_perplotperyear %>%
   dplyr::select(plotID, siteID, easting, northing, utmZone)
 ```
 ```{r tidyverse, echo=FALSE}
-aop_retriever(plots, years=2018,
-       products=c("DP3.30010.001"))
+plt = readr::read_csv("//ufrc/ewhite/s.marconi/Chapter3/neonVegWrangleR/outdir/field_data/vst_latest_2m.csv")
+#plt_2019 = plots %>% filter(siteID %in% c("BONA", "DELA", "NIWO", "CLBJ"))
+dt <- split.data.frame(plt, f = plt$siteID)
+library(parallel)
+# Calculate the number of cores
+no_cores <- 6
+# Initiate cluster
+cl <- makeCluster(no_cores)
+parLapply(cl = cl, dt, retrieve_aop_data)
+stopCluster(cl)
+
+# retrieve_aop_data(plt, year=2019,
+#        products=c("DP1.30003.001", "DP3.30006.001","DP3.30015.001", 
+#           "DP3.30024.001", "DP3.30025.001"))
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ```{r tidyverse, echo=FALSE}
-crop_data_to_plot(dtprd=c( "DP3.30006.001","DP3.30015.001", 
-          "DP3.30024.001", "DP3.30025.001"), plots, bff=22)
 
-crop_data_to_plot(dtprd="DP3.30010.001", plots, bff=220)
+plt = readr::read_csv("//ufrc/ewhite/s.marconi/Chapter3/neonVegWrangleR/outdir/field_data/vst_latest_2m.csv")
+
+crop_data_to_plot(dtprd=c("DP3.30006.001","DP3.30015.001",
+          "DP3.30024.001", "DP3.30025.001", "DP3.30010.001"), plt, bff=25)
+
 ```
 
 
