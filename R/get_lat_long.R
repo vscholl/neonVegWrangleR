@@ -12,25 +12,26 @@ get_lat_long <- function(field_data){
   new_dat <- NULL
   for(NeonSites in unique(field_data$siteID)){
     dat <- field_data[field_data$siteID %in% NeonSites,]
-    dat <- dplyr::select(dat, c("individualID", "eventID",
-                               "domainID", "siteID", "plotID", "taxonID",
-                               "scientificName", "api.utmZone",
-                               "northing","easting", "api.elevation"))
-    dat <- dat[complete.cases(dat),]
+    colnames(dat)[31:32] = c("plotLatitude", "plotLongitude")
+    # dat <- dplyr::select(dat, c("individualID", "eventID",
+    #                            "domainID", "siteID", "plotID", "taxonID",
+    #                            "scientificName", "utmZone",
+    #                            "Northing","Easting", "elevation"))
+    #dat <- dat[complete.cases(dat),]
     #todo: check the UTMS
-    epsg <- get_epsg_from_utm(unique(dat$api.utmZone))
+    epsg <- get_epsg_from_utm(as.character(unique(dat$utmZone)))
     # transform coordinates to lat/lon and add these columns to the df
     for(ii in 1:length(epsg)){
       utmZn <- substr(epsg, 4, nchar(epsg))
       utmZn <- paste(as.integer(utmZn), "N", sep = "")
-      dt = dplyr::filter(dat, api.utmZone == utmZn[ii])
-      utm_coords <- dt[c("easting", "northing")]
-      sp::coordinates(dt) <- c("easting", "northing")
+      dt = dplyr::filter(dat, utmZone == utmZn[ii])
+      utm_coords <- dt[c("itcEasting", "itcNorthing")]
+      sp::coordinates(dt) <- c("itcEasting", "itcNorthing")
       sp::proj4string(dt) <- sp::CRS(paste("+init=epsg:", epsg[ii], sep = ""))
       CRS.new <- sp::CRS("+init=epsg:4326")
       dt <- sp::spTransform(dt, CRS.new)
       coords_dat <- dt@coords
-      colnames(dt@coords) <- c("latitude", "longitude")
+      colnames(dt@coords) <- c("itcLongitude", "itcLatitude")
       new_dat <- rbind(new_dat, cbind(dt@data, utm_coords, dt@coords))
     }
   }
